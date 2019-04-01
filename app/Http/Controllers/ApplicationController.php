@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use app\Application;
+use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends Controller
 {
     private $url = "https://ko.tour-shop.ru/siteLead";
     private $site_id = 100;
+
 
     //
     function create(Request $request)
@@ -17,7 +19,7 @@ class ApplicationController extends Controller
             'name' => 'required',
             'arrival' => 'required',
             'departure' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|regex:/((\d+)?$)/u',
         ]);
         $client = new \GuzzleHttp\Client();
         $form_params = [
@@ -36,7 +38,16 @@ class ApplicationController extends Controller
             'form_params' => $form_params,
         ]);
         $body = $response->getBody();
-        $lead_id = substr($body, strpos($body, "=") + 1);
+
+        //проверка, есть ли ошибка
+        if (strpos($body, 'error') !== false) {
+            Session::flash('error', 'Add error! '.$body);
+
+            return redirect('http://otels.ru.xsph.ru/');
+        }
+        if ($body) {
+            $lead_id = substr($body, strpos($body, "=") + 1);
+        }
         $body->seek(0);
         $body->read(1024);
         $application = new \App\Application();
@@ -46,5 +57,8 @@ class ApplicationController extends Controller
         $application->phone = $request->phone;
         $application->lead_id = intval($lead_id);
         $application->save();
+
+        Session::flash('success', 'Заявка добавлена!');
+        return redirect('http://otels.ru.xsph.ru/');
     }
 }
