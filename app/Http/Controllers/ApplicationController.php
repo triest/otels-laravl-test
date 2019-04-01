@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use app\Application;
+use  \App\Application;
 use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends Controller
@@ -11,6 +11,15 @@ class ApplicationController extends Controller
     private $url = "https://ko.tour-shop.ru/siteLead";
     private $site_id = 100;
 
+    function list()
+    {
+        $applications = Application::select(
+            ['id', 'name', 'arrival_date', 'departure_date', 'lead_id', 'phone', 'created_at'])
+            ->orderBy('created_at')
+            ->simplePaginate(30);
+
+        return view('list')->with(['applications' => $applications]);
+    }
 
     //
     function create(Request $request)
@@ -32,6 +41,14 @@ class ApplicationController extends Controller
                 ['name' => 'Телефон', 'value' => $request->phone],
             ],
         ];
+
+        $arrival = $request->arrival;
+        $departure = $request->departure;
+        if ($departure < $arrival) {
+            Session::flash('error', 'Дата заезда раньше даты выезда!');
+
+            return redirect('http://otels.ru.xsph.ru/');
+        }
 
         $response = $client->post($this->url, [
             'headers' => ['KoSiteKey' => 'test198'],
@@ -59,6 +76,7 @@ class ApplicationController extends Controller
         $application->save();
 
         Session::flash('success', 'Заявка добавлена!');
+
         return redirect('http://otels.ru.xsph.ru/');
     }
 }
