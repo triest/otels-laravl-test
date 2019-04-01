@@ -3,38 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use app\Application;
 
 class ApplicationController extends Controller
 {
     private $url = "https://ko.tour-shop.ru/siteLead";
+    private $site_id = 100;
 
     //
     function create(Request $request)
     {
-        dump($request);
-
-
         $validatedData = $request->validate([
             'name' => 'required',
             'arrival' => 'required',
             'departure' => 'required',
+            'phone' => 'required',
         ]);
         $client = new \GuzzleHttp\Client();
-        $array = [];
-        $data = ['name' => 'Имя', 'value' => $request->name];
-        array_push($array, $data);
-        $data = ['name' => 'Дата заезда', 'value' => $request->arrival];
-        array_push($array, $data);
-        $data = ['name' => 'Дата выезда', 'value' => $request->departure];
-        array_push($array, $data);
-        $data = ['name' => 'Телефон', 'value' => $request->phone];
-        array_push($array, $data);
-        $body['site_id'] = 100;
-        $body['type'] = 'order';
-        $body['data'] = $array;
-
         $form_params = [
-            'site_id' => 100,
+            'site_id' => $this->site_id,
             'type' => 'order',
             'data' => [
                 ['name' => 'Имя', 'value' => $request->name],
@@ -49,11 +36,15 @@ class ApplicationController extends Controller
             'form_params' => $form_params,
         ]);
         $body = $response->getBody();
-        echo $body;
-// Cast to a string: { ... }
+        $lead_id = substr($body, strpos($body, "=") + 1);
         $body->seek(0);
-// Rewind the body
         $body->read(1024);
-
+        $application = new \App\Application();
+        $application->name = $request->name;
+        $application->arrival_date = $request->arrival;
+        $application->departure_date = $request->departure;
+        $application->phone = $request->phone;
+        $application->lead_id = intval($lead_id);
+        $application->save();
     }
 }
