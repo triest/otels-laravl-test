@@ -23,40 +23,43 @@
                            required>
                 </div>
             </div>
-
-
             @if($errors->has('name'))
                 <font color="red"><p>  {{$errors->first('name')}}</p></font>
             @endif
             <br>
+
+
             <div class="form-group row">
                 <label for="phone" class="col-md-2 control-label">Телефон:</label>
                 <div class="col-3">
-                    <input type="text" id="phone" name="phone" class="input-medium bfh-phone" width="100" required>
-                    @if($errors->has('phone'))
-                        <font color="red"><p>  {{$errors->first('phone')}}</p></font>
-                    @endif
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="dates">
-                    <label for="arrival" class="col-md-3 control-label">Дата заезда</label>
-                    <div class="col-10">
-                        <input type="text" style="width:200px;background-color:#aed6f1;" class="form-control"
-                               name="arrival"
-                               id="arrival" placeholder="YYYY-MM-DD" autocomplete="off" required>
-                    </div>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="phone" width="100"
+                           required>
                 </div>
             </div>
             @if($errors->has('phone'))
                 <font color="red"><p>  {{$errors->first('phone')}}</p></font>
             @endif
+            <br>
+            <div class="form-group">
+                <div class="dates row">
+                    <label class="col-md-2 control-label">Дата заезда:</label>
+                    <div class="col-3">
+                        <input type="text" class="col form-control form-control-sm" name="arrival"
+                               id="arrival" placeholder="YYYY-MM-DD" autocomplete="off" width="100" required>
+                    </div>
+                </div>
+            </div>
+            @if($errors->has('arrival'))
+                <font color="red"><p>  {{$errors->first('arrival')}}</p></font>
+            @endif
+            <br>
+
 
             <div class="form-group row">
                 <div class="dates">
-                    <label class="col-md-3 control-label">Дата выезда</label>
+                    <label for="departure" class="col-md-7 control-label">Дата выезда</label>
                     <div class="col-10">
-                        <input type="text" style="width:200px;background-color:#aed6f1;" class="form-control"
+                        <input type="text" class="form-control"
                                name="departure"
                                id="departure" placeholder="YYYY-MM-DD" autocomplete="off" required>
                     </div>
