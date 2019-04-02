@@ -32,7 +32,7 @@
             <div class="form-group row">
                 <label for="phone" class="col-md-2 control-label">Телефон:</label>
                 <div class="col-3">
-                    <input type="text" class="form-control" id="phone" name="phone" placeholder="phone" width="100"
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="телефон" width="100"
                            required>
                 </div>
             </div>
@@ -48,22 +48,21 @@
                                id="arrival" placeholder="YYYY-MM-DD" autocomplete="off" width="100" required>
                     </div>
                 </div>
+                @if($errors->has('arrival'))
+                    <font color="red"><p>  {{$errors->first('arrival')}}</p></font>
+                @endif
             </div>
-            @if($errors->has('arrival'))
-                <font color="red"><p>  {{$errors->first('arrival')}}</p></font>
-            @endif
-            <br>
-
-
-            <div class="form-group row">
-                <div class="dates">
-                    <label for="departure" class="col-md-7 control-label">Дата выезда</label>
-                    <div class="col-10">
-                        <input type="text" class="form-control"
-                               name="departure"
-                               id="departure" placeholder="YYYY-MM-DD" autocomplete="off" required>
+            <div class="form-group">
+                <div class="dates row">
+                    <label class="col-md-2 control-label">Дата выезда:</label>
+                    <div class="col-3">
+                        <input type="text" class="col form-control form-control-sm" name="departure"
+                               id="departure" placeholder="YYYY-MM-DD" autocomplete="off" width="100" required>
                     </div>
                 </div>
+                @if($errors->has('departure'))
+                    <font color="red"><p>  {{$errors->first('departure')}}</p></font>
+                @endif
             </div>
             <br>
             <button type="submit" class="btn btn-primary">Создать заявку</button>

@@ -50,6 +50,13 @@ class ApplicationController extends Controller
             return redirect('http://otels.ru.xsph.ru/');
         }
 
+        $mytime = date('Y-m-d');
+        if ($arrival < $mytime) {
+            Session::flash('error', 'Дата заезда уже прошла!');
+
+            return redirect('http://otels.ru.xsph.ru/');
+        }
+
         $response = $client->post($this->url, [
             'headers' => ['KoSiteKey' => 'test198'],
             'form_params' => $form_params,
